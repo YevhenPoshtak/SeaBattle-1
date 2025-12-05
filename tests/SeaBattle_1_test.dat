@@ -1,0 +1,325 @@
+# ===================================================
+# SeaBattle_1_test.dat - Comprehensive Test Data
+# ===================================================
+# Format: TEST_TYPE param1 param2 ...
+#
+# TEST_TYPES:
+#   BOARD_INIT size
+#   SHIP_PLACE size x y orient len symbol
+#   SHOT x y expected_result
+#
+# Parameters:
+#   size - board size (10-26)
+#   x, y - coordinates (0-based)
+#   orient - orientation (0=horizontal left, 1=vertical up)
+#   len - ship length (1-4)
+#   symbol - ship symbol (A-Z)
+#   expected_result - 0=miss, 1=hit, 2=sunk
+#
+# Notes:
+#   - Lines starting with # are comments
+#   - Empty lines are ignored
+#   - SHOT tests are sequential (use same board)
+#   - Each SHOT sequence shares the same board state
+# ===================================================
+
+# ===================================================
+# CATEGORY 1: BOARD SIZE VALIDATION
+# ===================================================
+# Test minimum board size
+BOARD_INIT 10
+
+# Test medium board sizes
+BOARD_INIT 15
+BOARD_INIT 20
+
+# Test maximum board size
+BOARD_INIT 26
+
+# Test various sizes
+BOARD_INIT 12
+BOARD_INIT 18
+BOARD_INIT 24
+
+# ===================================================
+# CATEGORY 2: SHIP PLACEMENT VALIDATION
+# ===================================================
+
+# --- Valid Placements ---
+# Horizontal ship in center
+SHIP_PLACE 10 5 5 0 3 A
+
+# Vertical ship in center
+SHIP_PLACE 10 7 7 1 4 B
+
+# Small ship horizontal
+SHIP_PLACE 10 2 2 0 2 C
+
+# Single cell ship
+SHIP_PLACE 10 9 9 1 1 D
+
+# Ship at top-left
+SHIP_PLACE 10 3 0 0 4 E
+
+# Ship at bottom-right
+SHIP_PLACE 10 9 9 0 1 F
+
+# --- Edge Cases ---
+# Ship at exact left edge (horizontal)
+SHIP_PLACE 10 3 5 0 4 G
+
+# Ship at exact top edge (vertical)
+SHIP_PLACE 10 5 3 1 4 H
+
+# Ship at right boundary
+SHIP_PLACE 15 14 7 0 1 I
+
+# Ship at bottom boundary
+SHIP_PLACE 15 7 14 1 1 J
+
+# --- Different Board Sizes ---
+# Large board placements
+SHIP_PLACE 20 10 10 0 4 K
+SHIP_PLACE 20 15 15 1 3 L
+SHIP_PLACE 20 5 5 0 2 M
+
+# Maximum board placements
+SHIP_PLACE 26 13 13 0 4 N
+SHIP_PLACE 26 20 20 1 3 O
+
+# ===================================================
+# CATEGORY 3: SHIP ROTATION TESTS
+# ===================================================
+
+# Horizontal 4-deck ship
+SHIP_PLACE 10 6 3 0 4 R1
+
+# Vertical 4-deck ship at same start point
+SHIP_PLACE 10 3 6 1 4 R2
+
+# Horizontal 3-deck
+SHIP_PLACE 10 8 5 0 3 R3
+
+# Vertical 3-deck
+SHIP_PLACE 10 5 8 1 3 R4
+
+# Horizontal 2-deck
+SHIP_PLACE 10 5 2 0 2 R5
+
+# Vertical 2-deck
+SHIP_PLACE 10 2 5 1 2 R6
+
+# ===================================================
+# CATEGORY 4: SHOT VALIDATION TESTS
+# ===================================================
+# Board Setup: Ship at (5,5) vertical, length 3
+# Ship occupies: (5,5), (5,6), (5,7)
+
+# --- Basic Shot Tests ---
+# Test miss at corner
+SHOT 0 0 0
+
+# Test miss at center
+SHOT 4 4 0
+
+# Test miss near ship
+SHOT 6 5 0
+
+# Test first hit
+SHOT 5 5 1
+
+# Test duplicate shot on hit
+SHOT 5 5 0
+
+# Test second hit
+SHOT 5 6 1
+
+# Test duplicate shot on second hit
+SHOT 5 6 0
+
+# Test third hit (sinks ship)
+SHOT 5 7 2
+
+# Test shot on sunk ship
+SHOT 5 5 0
+
+# Test shot on sunk ship (different cell)
+SHOT 5 6 0
+
+# --- Additional Miss Tests ---
+SHOT 1 1 0
+SHOT 2 2 0
+SHOT 3 3 0
+SHOT 8 8 0
+SHOT 9 9 0
+
+# ===================================================
+# CATEGORY 5: MULTIPLE SHIPS SCENARIO
+# ===================================================
+# Note: These are placement tests, actual combat
+# would require separate SHOT sequences
+
+# Scenario: 10x10 board with standard fleet
+SHIP_PLACE 10 3 1 0 4 M1
+SHIP_PLACE 10 7 3 1 3 M2
+SHIP_PLACE 10 5 5 0 3 M3
+SHIP_PLACE 10 2 7 1 2 M4
+SHIP_PLACE 10 8 8 0 2 M5
+SHIP_PLACE 10 1 9 0 1 M6
+SHIP_PLACE 10 4 9 0 1 M7
+SHIP_PLACE 10 7 9 0 1 M8
+SHIP_PLACE 10 9 9 0 1 M9
+
+# ===================================================
+# CATEGORY 6: VOLLEY SYSTEM TESTS
+# ===================================================
+# Sequential shots simulating volley fire
+
+# First volley - mix of hits and misses
+SHOT 0 1 0
+SHOT 1 1 0
+SHOT 2 1 0
+
+# Second volley - targeting pattern
+SHOT 5 0 0
+SHOT 5 1 0
+SHOT 5 2 0
+
+# Third volley - spread pattern
+SHOT 0 5 0
+SHOT 9 5 0
+
+# ===================================================
+# CATEGORY 7: EDGE CASE TESTS
+# ===================================================
+
+# Board with ships at all edges
+SHIP_PLACE 10 3 0 0 4 E1
+SHIP_PLACE 10 0 3 1 4 E2
+SHIP_PLACE 10 9 3 1 4 E3
+SHIP_PLACE 10 6 9 0 4 E4
+
+# Minimum length ships
+SHIP_PLACE 10 0 0 0 1 S1
+SHIP_PLACE 10 9 0 0 1 S2
+SHIP_PLACE 10 0 9 0 1 S3
+SHIP_PLACE 10 9 9 0 1 S4
+
+# Maximum length ships
+SHIP_PLACE 15 6 5 0 4 L1
+SHIP_PLACE 15 5 6 1 4 L2
+
+# ===================================================
+# CATEGORY 8: STRESS TESTS
+# ===================================================
+
+# Large board with many ships
+BOARD_INIT 20
+
+SHIP_PLACE 20 5 5 0 4 ST1
+SHIP_PLACE 20 10 5 0 4 ST2
+SHIP_PLACE 20 15 5 0 4 ST3
+SHIP_PLACE 20 5 10 1 3 ST4
+SHIP_PLACE 20 10 10 1 3 ST5
+SHIP_PLACE 20 15 10 1 3 ST6
+SHIP_PLACE 20 5 15 0 2 ST7
+SHIP_PLACE 20 10 15 0 2 ST8
+SHIP_PLACE 20 15 15 0 2 ST9
+
+# ===================================================
+# CATEGORY 9: COORDINATE SYSTEM TESTS
+# ===================================================
+
+# Test position calculations for different board sizes
+# Position formula: pos = row * boardSize + col
+
+# 10x10: position 55 = row 5, col 5
+SHIP_PLACE 10 5 5 1 3 C1
+
+# 10x10: Ship at top-left corner
+SHIP_PLACE 10 2 0 0 3 C2
+
+# 10x10: Single ship at bottom-right
+SHIP_PLACE 10 9 9 0 1 C3
+
+# 15x15: position 112 = row 7, col 7 (7*15+7=112)
+SHIP_PLACE 15 7 7 1 4 C4
+
+# ===================================================
+# CATEGORY 10: SHIP COUNTING TESTS
+# ===================================================
+
+# Place fleet for counting test
+SHIP_PLACE 10 3 1 0 4 CT1
+SHIP_PLACE 10 7 1 0 3 CT2
+SHIP_PLACE 10 3 3 0 3 CT3
+SHIP_PLACE 10 7 3 0 2 CT4
+SHIP_PLACE 10 3 5 0 2 CT5
+SHIP_PLACE 10 7 5 0 2 CT6
+SHIP_PLACE 10 3 7 0 1 CT7
+SHIP_PLACE 10 5 7 0 1 CT8
+SHIP_PLACE 10 7 7 0 1 CT9
+SHIP_PLACE 10 9 7 0 1 CT10
+
+# ===================================================
+# CATEGORY 11: SPECIAL PATTERNS
+# ===================================================
+
+# Diagonal-like placement pattern
+SHIP_PLACE 15 2 2 0 2 P1
+SHIP_PLACE 15 5 5 0 2 P2
+SHIP_PLACE 15 8 8 0 2 P3
+SHIP_PLACE 15 11 11 0 2 P4
+
+# Cross pattern
+SHIP_PLACE 15 7 5 1 4 P5
+SHIP_PLACE 15 9 7 0 4 P6
+
+# ===================================================
+# CATEGORY 12: BOUNDARY TESTS
+# ===================================================
+
+# Ships exactly at boundaries
+SHIP_PLACE 10 9 0 0 1 B1
+SHIP_PLACE 10 0 0 1 1 B2
+SHIP_PLACE 10 0 9 0 1 B3
+SHIP_PLACE 10 9 9 1 1 B4
+
+# Ships one cell from boundary
+SHIP_PLACE 10 8 1 0 2 B5
+SHIP_PLACE 10 1 8 1 2 B6
+
+# Maximum length ships at boundaries
+SHIP_PLACE 10 6 0 0 4 B7
+SHIP_PLACE 10 0 6 1 4 B8
+
+# ===================================================
+# CATEGORY 13: COMBAT SEQUENCES
+# ===================================================
+# Extended combat simulation
+
+# Setup: Multiple ships for combat test
+# (Using previous ship placements from CATEGORY 4)
+
+# Systematic grid search pattern
+SHOT 0 2 0
+SHOT 2 2 0
+SHOT 4 2 0
+SHOT 6 2 0
+SHOT 8 2 0
+
+# Targeting specific area
+SHOT 5 3 0
+SHOT 5 4 0
+SHOT 5 8 0
+SHOT 5 9 0
+
+# Random pattern shots
+SHOT 1 3 0
+SHOT 3 7 0
+SHOT 7 1 0
+SHOT 9 3 0
+
+# ===================================================
+# END OF TEST DATA
+# ===================================================
